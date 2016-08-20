@@ -1,0 +1,9 @@
+package mergeArrays;
+
+public class mergeArrays {
+
+	public boolean mergeArrays(int[] array1, int[] array2)
+	{
+		
+	}
+}

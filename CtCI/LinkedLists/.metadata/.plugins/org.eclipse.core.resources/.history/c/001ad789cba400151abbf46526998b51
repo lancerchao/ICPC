@@ -1,0 +1,62 @@
+import junit.framework.*;
+
+public class testRemoveDup extends TestCase {
+	Node list1;
+	Node list2;
+	
+	void setUp()
+	{
+		list1 = new Node(1);
+		list1.appendToTail(2);
+		list1.appendToTail(3);
+		list1.appendToTail(3);
+		list1.appendToTail(3);
+		list1.appendToTail(3);
+		list1.appendToTail(4);
+		list1.appendToTail(2);
+		list1.appendToTail(5);
+		list1.appendToTail(2);
+		list1.appendToTail(1);
+		list1.appendToTail(6);
+	}
+	public void testRemoveSimple() {
+		Node head = new Node(1);
+		head.appendToTail(2);
+		head.appendToTail(3);
+		head.appendToTail(3);
+		head.appendToTail(3);
+		head.appendToTail(3);
+		head.appendToTail(4);
+		head.appendToTail(2);
+		head.appendToTail(5);
+		head.appendToTail(2);
+		head.appendToTail(1);
+		head.appendToTail(6);
+		head.removeDup();
+	}
+	public void testRemoveNone()
+	{
+		Node head = new Node(1);
+		head.appendToTail(2);
+		head.appendToTail(3);
+		head.appendToTail(5);
+		head.appendToTail(6);
+	}
+	
+	public void testSize()
+	{
+		Node head = new Node(1);
+		head.appendToTail(2);
+		head.appendToTail(3);
+		head.appendToTail(3);
+		head.appendToTail(3);
+		head.appendToTail(3);
+		head.appendToTail(4);
+		head.appendToTail(2);
+		head.appendToTail(5);
+		head.appendToTail(2);
+		head.appendToTail(1);
+		head.appendToTail(6);
+		assertTrue(head.size() == 12);
+	}
+}

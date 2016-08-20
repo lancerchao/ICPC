@@ -1,0 +1,10 @@
+package mergeArrays;
+import junit.framework.*;
+
+public class testMergeArrays extends TestCase{
+
+	int[] array1;
+	int[] array2;
+	
+	
+}

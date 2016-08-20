@@ -1,0 +1,83 @@
+pre {
+    color: #333;
+}
+
+/**
+ * The remainder of this file is modified from
+ * https://github.com/Kattis/problemtools/blob/master/templates/html/Themes/default/problem.css
+ * Every rule is prefixed with .kattisbox
+ */
+.kattisbox .problemheader {
+    text-align: center;
+}
+
+.kattisbox .problembody {
+    font-family: 'Times New Roman', Georgia, serif;
+    font-size: 1.1em;
+    text-align: justify;
+    padding-top: 1.5em;
+}
+
+.kattisbox .problembody h2, .kattisbox .problembody h3, .kattisbox .problembody table.sample th {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.kattisbox div.minipage {
+  display: inline-block;
+}
+
+.kattisbox div.illustration {
+    float: right;
+    padding-left: 20px;
+}
+
+.kattisbox img.illustration {
+    width: 100%;
+}
+
+.kattisbox div.figure {
+  display: block;
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.kattisbox .illustration div.description {
+    font-size: 8pt;
+    text-align: right;
+}
+
+.kattisbox .problembody p {
+  text-align: justify;
+}
+
+.kattisbox td {
+  vertical-align:top;
+}
+
+.kattisbox table, .kattisbox table td {
+   border: 0;
+}
+
+.kattisbox table.tabular p {
+    margin: 0;
+}
+
+.kattisbox table.sample {
+    width: 100%;
+}
+
+.kattisbox table.sample th {
+    text-align: left;
+    width: 50%;
+    padding: 3px;
+}
+
+.kattisbox table.sample td {
+    /*
+     * border: 1px solid black;
+     */
+    padding: 3px;
+}
+
+/* end of kattis box styles */

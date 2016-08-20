@@ -1,0 +1,44 @@
+/*
+Difficulty: Medium
+
+Problem Statement:
+You are given two strings, A and B. Find if there is a substring that appears in both A and B.
+
+Naive implementation was to loop through one string and see if its character matches another string. However
+that is inefficient as repeated characters in one string could cause repeated characters to be searched for
+in the other string, even although it already knows its not there. Therefore, loop through alphabet instead
+*/
+
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader c = new BufferedReader(new InputStreamReader(System.in));
+        Integer numops = Integer.parseInt(c.readLine());
+        while(numops > 0)
+            {
+            String str1 = c.readLine();
+            String str2 = c.readLine();
+            if (subStringFound(str1, str2))
+                System.out.println("YES");
+            else
+                System.out.println("NO");
+            numops--;
+        }  
+    }
+    
+    public static boolean subStringFound(String str1, String str2)
+        {
+        for(char c = 'a';c <= 'z';c++)
+            {
+            if (str1.indexOf(c) != -1 && str2.indexOf(c) != -1)
+                return true;
+        }
+        return false;
+    }
+}

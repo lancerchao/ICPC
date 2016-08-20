@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename local variable &apos;prev&apos; in &apos;LRUCache.set(...)&apos; to &apos;toRemove&apos;&#x0A;- Original project: &apos;LRU&apos;&#x0A;- Original element: &apos;LRUCache.set(int, int).prev&apos;&#x0A;- Renamed element: &apos;prev&apos;&#x0A;- Update references to refactored element" description="Rename local variable &apos;prev&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src&lt;{LRUCache.java[LRUCache~set~I~I@prev!964!985!969!972!QNode;!0!false" name="toRemove" references="true" stamp="1453863162929" version="1.0"/>
+</session>

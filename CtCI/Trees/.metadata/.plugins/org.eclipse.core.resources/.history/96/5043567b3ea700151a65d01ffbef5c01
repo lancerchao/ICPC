@@ -1,0 +1,89 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.ListIterator;
+
+import junit.framework.*;
+
+public class BSTTest extends TestCase {
+	BST<Integer> intTree;
+	BST<Integer> intTreeBalanced;
+
+	public void setUp() {
+		intTree = new BST<Integer>(0);
+		intTree.insert(100);
+		intTree.insert(50);
+		intTree.insert(200);
+		intTree.insert(25);
+		intTree.insert(75);
+		intTree.insert(250);
+		intTree.insert(15);
+		intTree.insert(35);
+		intTree.insert(300);
+
+		intTreeBalanced = new BST<Integer>(0);
+		intTreeBalanced.insert(100);
+		intTreeBalanced.insert(50);
+		intTreeBalanced.insert(200);
+		intTreeBalanced.insert(25);
+		intTreeBalanced.insert(75);
+		intTreeBalanced.insert(150);
+		intTreeBalanced.insert(250);
+		intTreeBalanced.insert(15);
+		intTreeBalanced.insert(35);
+		intTreeBalanced.insert(300);
+	}
+
+	public void testLevels() {
+		assertTrue(intTree.levels() == 4);
+	}
+
+	public void testLevelsNoGlobal() {
+		assertEquals(intTree.levelsNoGlobal(), 4);
+	}
+
+	public void testBalancedNaive() {
+		assertFalse(intTree.isBalanced());
+		assertTrue(intTreeBalanced.isBalanced());
+	}
+
+	public void testBalancedBetter() {
+		assertFalse(intTree.isBalancedBetter());
+		assertTrue(intTreeBalanced.isBalancedBetter());
+	}
+
+	public void testImportIncreasingArray() {
+		Integer[] array = { 25, 35, 50, 75, 100, 200, 250 };
+		intTree.importIncreasingArray(array);
+		assertEquals(intTree.levelsNoGlobal(), 3);
+		Integer[] array2 = { 2, 5, 10, 15, 25, 35, 50, 75, 100, 200, 250, 300, 350, 400, 450 };
+		intTree.importIncreasingArray(array2);
+		assertEquals(intTree.levelsNoGlobal(), 4);
+		Integer[] array3 = { 2, 5, 10, 15, 20, 25, 35, 50, 75, 100, 150, 200, 250, 300, 350, 400, 450, 500 };
+		intTree.importIncreasingArray(array3);
+		assertEquals(intTree.levelsNoGlobal(), 5);
+	}
+
+	public void testSize() {
+		assertEquals(intTree.size(), 9);
+		assertEquals(intTreeBalanced.size(), 10);
+	}
+
+	public void testCreatedLinkedList() {
+		Integer[] array = { 25, 35, 50, 75, 100, 200, 250 };
+		intTree.importIncreasingArray(array);
+		assertEquals(intTree.levelsNoGlobal(), 3);
+		ArrayList<LinkedList<Integer>> ar= intTree.createLinkedList();
+		for(int i=0;i<ar.size();i++)
+		{
+			LinkedList<Integer> list = ar.get(i);
+			if (ar != null)
+			{
+				ListIterator<Integer> iterator = list.listIterator();
+				while(iterator.hasNext())
+				{
+					System.out.println(iterator.next());
+				}
+			}
+		}
+	}
+}

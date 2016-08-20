@@ -1,0 +1,12 @@
+package mergeArrays;
+
+public class mergeArrays {
+	public static void main(String args[])
+	{
+		
+	}
+	private static void mergeArrays(int[] array1, int[] array2)
+	{
+		
+	}
+}

@@ -1,0 +1,6 @@
+package mergeArrays;
+import junit.framework.*;
+
+public class testMergeArrays extends TestCase{
+
+}

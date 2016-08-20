@@ -1,0 +1,2 @@
+INDEX VERSION 1.127+/home/lance/Desktop/Programming/DataStructures/.metadata/.plugins/org.eclipse.jdt.core
+857312893.index

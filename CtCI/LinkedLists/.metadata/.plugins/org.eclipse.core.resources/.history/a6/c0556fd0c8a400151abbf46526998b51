@@ -1,0 +1,19 @@
+import junit.framework.*;
+
+public class testRemoveDup extends TestCase {
+	public void testRemoveSimple() {
+		Node head = new Node(1);
+		head.appendToTail(2);
+		head.appendToTail(3);
+		head.appendToTail(3);
+		head.appendToTail(3);
+		head.appendToTail(3);
+		head.appendToTail(4);
+		head.appendToTail(2);
+		head.appendToTail(5);
+		head.appendToTail(2);
+		head.appendToTail(1);
+		head.appendToTail(6);
+		head.removeDup();
+	}
+}

@@ -1,0 +1,48 @@
+import junit.framework.*;
+
+public class BSTTest extends TestCase {
+	BST<Integer> intTree;
+	BST<Integer> intTreeBalanced;
+	public void setUp() {
+		intTree = new BST<Integer>(0);
+		intTree.insert(100);
+		intTree.insert(50);
+		intTree.insert(200);
+		intTree.insert(25);
+		intTree.insert(75);
+		intTree.insert(250);
+		intTree.insert(15);
+		intTree.insert(35);
+		
+		intTreeBalanced = new BST<Integer>(0);
+		intTreeBalanced.insert(100);
+		intTreeBalanced.insert(50);
+		intTreeBalanced.insert(200);
+		intTreeBalanced.insert(25);
+		intTreeBalanced.insert(75);
+		intTreeBalanced.insert(150);
+		intTreeBalanced.insert(250);
+		intTreeBalanced.insert(15);
+		intTreeBalanced.insert(35);
+		intTreeBalanced.insert(300);
+	}
+	
+	public void testLevels()
+	{
+		assertTrue(intTree.levels() == 4);
+	}
+	
+	public void testLevelsNoGlobal()
+	{
+		assertEquals(intTree.levelsNoGlobal(),5);
+	}
+	
+	public void testBalancedNaive()
+	{
+		assertFalse(intTree.isBalanced());
+		assertTrue(intTreeBalanced.isBalanced());
+	}
+	public void testBalancedBetter()
+	{
+	}
+}

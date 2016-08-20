@@ -1,0 +1,33 @@
+package matrix;
+import junit.framework.*;
+public class testMatrix extends TestCase
+{
+	int[][] matrix1;
+	int matrix1Size = 4;
+	
+	public void setUp()
+	{
+		matrix1 = new int[matrix1Size][matrix1Size];
+		for(int row=0;row<matrix1Size;row++)
+			for(int col = 0;col<matrix1Size;col++)
+				matrix1[row][col] = row * matrix1Size + col;
+	}
+	
+	public void testEquals()
+	{
+		int [][] matrix2 = new int[matrix1Size][matrix1Size];
+		for(int row=0;row<matrix1Size;row++)
+			for(int col = 0;col<matrix1Size;col++)
+				matrix2[row][col] = row * matrix1Size + col;
+		assertTrue(Matrix.equals(matrix2, matrix1));
+	}
+	public void testRotate()
+	{
+		int [][] matrix2 = new int[matrix1Size][matrix1Size];
+		for(int row=matrix1Size-1;row>=0;row--)
+			for(int col = 0;col<matrix1Size;col++)
+				matrix2[row][col] = row * matrix1Size + col;
+	}
+	
+
+}

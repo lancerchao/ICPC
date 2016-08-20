@@ -1,0 +1,561 @@
+// BST<> provides a generic implementation of a binary search tree
+//
+// BST<> implementation constraints:
+//   - The tree uses package access for root, and for the node type.
+//   - The node type uses package access for its data members.
+//   - The tree never stores two objects for which compareTo() returns 0.
+//   - All tree traversals are performed recursively.
+//   - Optionally, the BST<> employs a pool of deleted nodes.
+//     If so, when an insertion is performed, a node from the pool is used 
+//     unless the pool is empty, and when a deletion is performed, the
+//     (cleaned) deleted node is added to the pool, unless the pool is
+//     full.  The maximum size of the pool is set via the constructor.
+//
+// User data type (T) constraints:
+//   - T implements compareTo() and equals() appropriately
+//   - compareTo() and equals() are consistent; that is, compareTo()
+//     returns 0 in exactly the same situations equals() returns true
+//
+public class BST<T extends Comparable<? super T>> {
+
+	class BinaryNode {
+
+		T element; // the data in the node
+		BinaryNode left; // pointer to the left child
+		BinaryNode right; // pointer to the right child
+
+		// Initialize a childless binary node.
+		// Pre: elem is not null
+		// Post: (in the new node)
+		// element == elem
+		// left == right == null
+		public BinaryNode(T elem) {
+			this(elem, null, null);
+		}
+
+		// Initialize a binary node with children.
+		// Pre: elem is not null
+		// Post: (in the new node)
+		// element == elem
+		// left == lt, right == rt
+		public BinaryNode(T elem, BinaryNode lt, BinaryNode rt) {
+			element = elem;
+			left = lt;
+			right = rt;
+		}
+	}
+
+	BinaryNode root; // pointer to root node, if present
+	BinaryNode pool; // pointer to first node in the pool
+	int pSize; // size limit for node pool
+	private int currSize = 0; // storage for number of levels in tree
+	private int currPoolSize = 0; // storage for number of nodes in pool
+
+	private int count = 0;
+
+	// Initialize empty BST with no node pool.
+	// Pre: none
+	// Post: (in the new tree)
+	// root == null, pool == null, pSize = 0
+	public BST() {
+		this(0);
+	}
+
+	// Initialize empty BST with a node pool of up to pSize nodes.
+	// Pre: none
+	// Post: (in the new tree)
+	// root == null, pool = null, pSize == Sz
+	public BST(int Sz) {
+		root = null;
+		pool = null;
+
+		pSize = Sz;
+	}
+
+	// Return true iff BST contains no nodes.
+	// Pre: none
+	// Post: the binary tree is unchanged
+	public boolean isEmpty() {
+		if (root == null) {
+			return true;
+		}
+		return false;
+	}
+
+	// Return pointer to matching data element, or null if no matching
+	// element exists in the BST. "Matching" should be tested using the
+	// data object's compareTo() method.
+	// Pre: x is null or points to a valid object of type T
+	// Post: the binary tree is unchanged
+	public T find(T x) {
+		BinaryNode node = find(x, root);
+		if (node != null) {
+			return node.element;
+		}
+		return null;
+	}
+
+	// Logic: Recursively compare element to each node until element is found,
+	// or return null if not found
+	private BinaryNode find(T x, BinaryNode sRoot) {
+		if (sRoot == null) {
+			return null;
+		}
+		int compareResult = x.compareTo(sRoot.element);
+		if (compareResult < 0) {
+			return find(x, sRoot.left);
+		} else if (compareResult > 0) {
+			return find(x, sRoot.right);
+		} else {
+			return sRoot;
+		}
+	}
+
+	// Insert element x into BST, unless it is already stored. Return true
+	// if insertion is performed and false otherwise.
+	// Pre: x is null or points to a valid object of type T
+	// Post: the binary tree contains x
+
+	public boolean insert(T x) {
+		if (this.find(x) != null) // Already exists
+		{
+			return false;
+		}
+		root = insert(x, root);
+
+		if (this.find(x) == null) {
+			return false;
+		}
+		return true;
+	}
+
+	// Taken from Mcquain's lecture slides
+	private BinaryNode insert(T x, BinaryNode sRoot) {
+		if (sRoot == null) {
+			BinaryNode a = removePool(x); // temporary storage
+			if (a != null) {
+				a.left = null;
+				a.right = null;
+				return a;
+			}
+			return new BinaryNode(x, null, null);
+		}
+		int compareResult = x.compareTo(sRoot.element);
+		if (compareResult < 0) {
+			sRoot.left = insert(x, sRoot.left);
+		} else if (compareResult > 0) {
+			sRoot.right = insert(x, sRoot.right);
+		} else {
+			;
+		}
+		return sRoot;
+	}
+
+	// Delete element matching x from the BST, if present. Return true if
+	// matching element is removed from the tree and false otherwise.
+	// Pre: x is null or points to a valid object of type T
+	// Post: the binary tree does not contain x
+	public boolean remove(T x) {
+		if (this.find(x) == null) // Element is not found in BST
+		{
+			return false;
+		}
+		root = remove(x, root);
+
+		if (this.find(x) != null) { // Element not deleted
+			return false;
+		}
+		return true;
+
+	}
+
+	// Logic: If deleted node had 0 or 1 children, deletion is trivial
+	// In case of two children, find the parent of minimum of right child.
+	// reset that parent so it points to its child's right child(if exists, null
+	// if
+	// it doesnt exist). Then reattach minimum of right child as appropriate
+	private BinaryNode remove(T x, BinaryNode sRoot) {
+		if (sRoot == null) {
+			return null;
+		}
+		int compareResult = x.compareTo(sRoot.element);
+		if (compareResult < 0) {
+			sRoot.left = remove(x, sRoot.left);
+		} else if (compareResult > 0) {
+			sRoot.right = remove(x, sRoot.right);
+		} else {
+			// no children
+			if (sRoot.left == null && sRoot.right == null) {
+				insertPool(sRoot);
+				return null;
+			}
+			// one child
+			if (sRoot.left == null && sRoot.right != null) {
+				BinaryNode temp = sRoot.right; // save reference
+				insertPool(sRoot);
+				return temp;
+
+			}
+			// one child
+			if (sRoot.left != null && sRoot.right == null) {
+				BinaryNode temp = sRoot.left;
+				insertPool(sRoot);
+				return temp;
+			}
+			// two children
+			if (sRoot.right.left == null) { // case where parentOfMin has no
+											// children
+				sRoot.right.left = sRoot.left;
+				BinaryNode temp = sRoot.right;
+				insertPool(sRoot);
+				return temp;
+			} else {
+				// parentOfMin has children
+				BinaryNode parentOfMinimum = parentOfMin(sRoot.right);
+				BinaryNode reassign = parentOfMinimum.left;
+				if (reassign.right != null) { // deleted child has right subtree
+					parentOfMinimum.left = reassign.right;
+				} else {
+					parentOfMinimum.left = null;
+				}
+				reassign.right = sRoot.right;
+				reassign.left = sRoot.left;
+				insertPool(sRoot);
+				return reassign;
+			}
+		}
+		return sRoot;
+	}
+
+	// Return the parent of the minimum child of sRoot. Used to reference
+	// a parent of a child that is to be deleted
+	private BinaryNode parentOfMin(BinaryNode sRoot) {
+		if (sRoot.left.left == null) {
+			return sRoot;
+		} else {
+			return parentOfMin(sRoot.left);
+		}
+
+	}
+
+	// Remove from the tree all values y such that y > x, according to
+	// compareTo().
+	// Pre: x is null or points to a valid object of type T
+	// Post: if the tree contains no value y such that compareTo()
+	// indicates y > x
+	public void cap(T x) {
+		if (!this.isEmpty()) {
+			cap(x, root);
+		}
+	}
+
+	// Logic: Recursively removes current node until current node contains an
+	// element
+	// less than y. Then recursively deletes its right element
+	private void cap(T x, BinaryNode sRoot) {
+		if (sRoot.element.compareTo(x) > 0) {
+			remove(sRoot.element);
+			cap(x);
+		} else {
+			if (sRoot.right != null) {
+				cap(x, sRoot.right);
+			}
+		}
+
+	}
+
+	// Return the tree to an empty state.
+	// Pre: none
+	// Post: the binary tree contains no elements
+	public void clear() {
+		root = null;
+
+	}
+
+	// Return true iff other is a BST that has the same physical structure
+	// and stores equal data values in corresponding nodes. "Equal" should
+	// be tested using the data object's equals() method.
+	// Pre: other is null or points to a valid BST<> object, instantiated
+	// on the same data type as the tree on which equals() is invoked
+	// Post: both binary trees are unchanged
+	@SuppressWarnings("unchecked")
+	public boolean equals(Object other) {
+		if (other == null) {
+			return false;
+		}
+		BST<T> temp = new BST<>(); // tree, set to be equal to other
+		temp = (BST<T>) other;
+		// Some preliminary checks to make sure trees are comparable
+		if (this.isEmpty() && temp.isEmpty()) {
+			return true;
+		}
+		if (this.isEmpty() || temp.isEmpty()) {
+			return false;
+		}
+
+		return equals(temp.root, root);
+
+	}
+
+	// Logic: Complete traversal of both trees, comparing element by element.
+	// Returns false
+	// when two nodes are found to contain different elements
+	private boolean equals(BinaryNode otherRoot, BinaryNode sRoot) {
+
+		if (otherRoot.element.compareTo(sRoot.element) != 0) { // element found
+																// to differ
+			return false;
+		}
+
+		// child exists in one tree but not the other
+		if ((otherRoot.right == null ^ sRoot.right == null) || (otherRoot.left == null ^ sRoot.left == null)) {
+			return false;
+		}
+		if (sRoot.left != null) {
+			return equals(otherRoot.left, sRoot.left);
+		}
+		if (sRoot.right != null) {
+			return equals(otherRoot.right, sRoot.right);
+		}
+		return true;
+	}
+
+	// Return number of levels in the tree. (An empty tree has 0 levels.)
+	// Pre: tree is a valid BST<> object
+	// Post: the binary tree is unchanged
+	public int levels() {
+		if (isEmpty()) {
+			return 0;
+		}
+		levels(root, 0);
+		return currSize;
+
+	}
+
+	// Logic: Complete traversal of tree, updating currSize whenever
+	// a child is found to be deeper than currSize. At the end of traversal
+	// currSize will have level of deepest child
+	// TODO: Try doing this without global variable
+	private BinaryNode levels(BinaryNode sRoot, int level) {
+		if (level > currSize) { // updates currSize whenever a deeper level is
+								// found
+			currSize = level;
+		}
+		if (sRoot == null) {
+			return null;
+		}
+		sRoot.left = levels(sRoot.left, level + 1);
+		sRoot.right = levels(sRoot.right, level + 1);
+		return sRoot;
+	}
+
+	public int levelsNoGlobal() {
+		if (isEmpty())
+			return 0;
+		return levelsNoGlobalHelper(root);
+	}
+
+	private int levelsNoGlobalHelper(BinaryNode sRoot) {
+		if (sRoot == null)
+			return 0;
+		int left = levelsNoGlobalHelper(sRoot.left);
+		int right = levelsNoGlobalHelper(sRoot.right);
+		int max = (left >= right)?left:right;
+		return 1+max;
+	}
+
+	// Helper method to insert node into pool
+	private void insertPool(BinaryNode node) {
+		if (this.pSize == 0) {
+			return;
+		}
+		if (this.pSize == this.currPoolSize) {
+			return;
+		}
+		node.right = null;
+		node.left = null;
+		if (currPoolSize == 0) {
+			pool = node;
+		} else {
+			pool = insertPool(pool, node);
+		}
+		currPoolSize++;
+	}
+
+	// Logic: Appends a node to the pool (using right child)
+	private BinaryNode insertPool(BinaryNode sPool, BinaryNode node) {
+		if (sPool == null) {
+			return node;
+		}
+		sPool.right = insertPool(sPool.right, node);
+		return sPool;
+	}
+
+	// helper method to remove node from pool
+	private BinaryNode removePool(T x) {
+		if (this.pSize == 0) {
+			return null;
+		}
+		if (pool == null) {
+			return null;
+		}
+		BinaryNode temp;
+		if (pool.element.compareTo(x) == 0) {
+			temp = pool;
+			pool = pool.right;
+		} else {
+			temp = removePool(x, pool);
+
+			if (temp != null) {
+				currPoolSize--;
+			}
+		}
+		return temp;
+	}
+
+	// Logic: Looks for an node that matches element, and removes it with
+	// similar
+	// logic to a linked list
+	private BinaryNode removePool(T x, BinaryNode sPool) {
+		if (sPool.right == null) {
+			return null;
+		}
+		if (sPool.right.element.compareTo(x) == 0) {
+			BinaryNode temp = sPool.right;
+			sPool.right = sPool.right.right;
+			return temp;
+		}
+		return removePool(x, sPool.right);
+
+	}
+
+	public int numFullNodes(BST<T> Tree) {
+		return numFullNodes(root, 0);
+	}
+
+	private int numFullNodes(BinaryNode sRoot, int count) {
+		if (sRoot == null) {
+			return 0;
+		}
+
+		if (sRoot.left != null && sRoot.right != null) {
+			count++;
+		}
+		if (sRoot.left != null) {
+			count = numFullNodes(sRoot.left, count);
+		}
+
+		if (sRoot.right != null) {
+			count = numFullNodes(sRoot.right, count);
+		}
+		return count;
+	}
+
+	public T LUB(T X) {
+		return LUBHelper(X, root);
+	}
+
+	private T LUBHelper(T X, BinaryNode sRoot) {
+
+		if (sRoot == null) {
+			return null;
+		}
+		int compareResult = X.compareTo(sRoot.element);
+		if (compareResult < 0) {
+			if (sRoot.left != null) {
+				T temp = LUBHelper(X, sRoot.left);
+				if (temp == null) {
+					return sRoot.element;
+				} else {
+					return temp;
+				}
+			} else {
+				return sRoot.element;
+			}
+		} else if (compareResult > 0) {
+			if (sRoot.right != null) {
+				return LUBHelper(X, sRoot.right); // X is greater than element
+			} else {
+				return null;
+			}
+		} else {
+			return sRoot.element;
+		}
+	}
+
+	public int kCount(T K) {
+		countHelper(K, this.root);
+		return this.count;
+	}
+
+	// TODO: Do this without the count global variable
+	private void countHelper(T K, BinaryNode sRoot) {
+		if (sRoot == null) {
+			return;
+		}
+		int compareResult = K.compareTo(sRoot.element);
+		if (compareResult > 0) {
+			count++;
+		}
+		if (sRoot.left != null) {
+			countHelper(K, sRoot.left);
+		}
+		if (sRoot.right != null) {
+			countHelper(K, sRoot.right);
+		}
+	}
+
+	public boolean isBalanced() {
+		if (isEmpty())
+			return true;
+		return isBalancedHelper(root);
+	}
+	
+	private boolean isBalancedHelper(BinaryNode sRoot)
+	{
+		if (sRoot == null)
+			return true;
+		int heightLeft = levelsNoGlobalHelper(sRoot.left);
+		int heightRight = levelsNoGlobalHelper(sRoot.right);
+		if (Math.abs(heightLeft-heightRight)>1)
+			return false;
+		return isBalancedHelper(sRoot.left) && isBalancedHelper(sRoot.right);
+	}
+	
+	public boolean isBalancedBetter()
+	{
+		if (isEmpty())
+			return true;
+		return (checkHeight(root) == -1)?false:true;
+		
+	}
+	
+	public int checkHeight(BinaryNode sRoot)
+	{
+		if (sRoot == null)
+			return 0;
+		int leftHeight = checkHeight(sRoot.left);
+		if (leftHeight == -1)
+			return -1;
+		int rightHeight = checkHeight(sRoot.right);
+		if (rightHeight == -1)
+			return -1;
+		
+		int heightdiff = leftHeight - rightHeight;
+		if (Math.abs(heightdiff) > 1)
+			return -1;
+		return Math.max(rightHeight, leftHeight)+1;
+	}
+	
+	/* CtCI 4.3. Given an increasing array, create minimal BST */
+	public void importIncreasingArray(int[] array)
+	{
+		importIncreasingArray(0, array.length/2);
+	}
+	
+	private void importIncreasingArrayHelper(int[] array, int min_index, int max_index)
+	{
+		
+	}
+
+}

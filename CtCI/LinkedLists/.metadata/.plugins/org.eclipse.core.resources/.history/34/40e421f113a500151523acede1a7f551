@@ -1,0 +1,122 @@
+import junit.framework.*;
+
+public class testRemoveDup extends TestCase {
+	Node list1;
+	Node list2;
+
+	protected void setUp() {
+		list1 = new Node(1);
+		list1.appendToTail(2);
+		list1.appendToTail(3);
+		list1.appendToTail(3);
+		list1.appendToTail(3);
+		list1.appendToTail(3);
+		list1.appendToTail(4);
+		list1.appendToTail(2);
+		list1.appendToTail(5);
+		list1.appendToTail(2);
+		list1.appendToTail(1);
+		list1.appendToTail(6);
+
+		list2 = new Node(1);
+		list2.appendToTail(2);
+		list2.appendToTail(3);
+		list2.appendToTail(4);
+		list2.appendToTail(5);
+		list2.appendToTail(6);
+	}
+
+	public void testRemoveSimple() {
+
+		Node.removeDup(list1);
+		assertTrue(Node.is_equal(list1, list2));
+	}
+
+	public void testRemoveNone() {
+		Node head = new Node(1);
+		head.appendToTail(2);
+		head.appendToTail(3);
+		head.appendToTail(4);
+		head.appendToTail(5);
+		head.appendToTail(6);
+		Node.removeDup(head);
+		assertTrue(Node.is_equal(head, list2));
+	}
+	
+	public void testRemoveSimpleNoDS()
+	{
+		Node.removeDupNoDS(list1);
+		assertTrue(Node.is_equal(list1, list2));
+	}
+	
+	public void testRemoveHash()
+	{
+		Node.removeDupHash(list1);
+		assertTrue(Node.is_equal(list1, list2));
+	}
+	
+	public void testRemoveNoneHash() {
+		Node head = new Node(1);
+		head.appendToTail(2);
+		head.appendToTail(3);
+		head.appendToTail(4);
+		head.appendToTail(5);
+		head.appendToTail(6);
+		Node.removeDupHash(head);
+		assertTrue(Node.is_equal(head, list2));
+	}
+	
+	public void testRemoveNoneNoDS() {
+		Node head = new Node(1);
+		head.appendToTail(2);
+		head.appendToTail(3);
+		head.appendToTail(4);
+		head.appendToTail(5);
+		head.appendToTail(6);
+		Node.removeDupNoDS(head);
+		assertTrue(Node.is_equal(head, list2));
+	}
+	
+	public void testSize() {
+		assertTrue(Node.size(list1) == 12);
+		assertTrue(Node.size(list2) == 6);
+	}
+	
+	public void testKthToLast()
+	{
+		assertTrue(Node.findKthToLast(list1, 2).data == 1);
+		assertTrue(Node.findKthToLast(list1, 3).data == 2);
+		assertTrue(Node.findKthToLast(list1, 12).data == 1);
+		assertTrue(Node.findKthToLast(list1, 1).data == 6);
+	}
+	
+	public void testKthToLastNULL()
+	{
+		assertTrue(Node.findKthToLast(list1, -1) == null);
+		assertTrue(Node.findKthToLast(list1, 20) == null);
+	}
+	public void testKthToLastIterative()
+	{
+		assertTrue(Node.findKthToLastIterative(list1, 2).data == 1);
+		assertTrue(Node.findKthToLastIterative(list1, 3).data == 2);
+		assertTrue(Node.findKthToLastIterative(list1, 12).data == 1);
+		assertTrue(Node.findKthToLastIterative(list1, 1).data == 6);
+	}
+	
+	public void testKthToLastNULLIterative()
+	{
+		assertTrue(Node.findKthToLastIterative(list1, -1) == null);
+		assertTrue(Node.findKthToLastIterative(list1, 20) == null);
+	}
+	
+	public void testRemoveMiddle()
+	{
+		Node toRemove = list1.next.next.next;
+		Node reference = new Node(1);
+		reference.appendToTail(2);
+		reference.appendToTail(3);
+		reference.appendToTail(5);
+		reference.appendToTail(6);
+		toRemove.removeMiddleNode();
+	}
+}

@@ -1,0 +1,4 @@
+#include junit.framework.*;
+public class testRemoveDup extends TestCase{
+
+}

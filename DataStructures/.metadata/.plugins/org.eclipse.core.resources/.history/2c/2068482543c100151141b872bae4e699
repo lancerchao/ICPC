@@ -1,0 +1,20 @@
+import junit.framework.*;
+
+public class trieTest extends TestRunner{
+	Trie t;
+	
+	public void setUp()
+	{
+		t = new Trie();
+	}
+	
+	public void testAddAndSearch()
+	{
+		t.insert("helloworld");
+		t.insert("heythere");
+		t.insert("hello");
+		t.insert("asdf");
+		assertTrue(t.search("hello"));
+		assertTrue()
+	}
+}

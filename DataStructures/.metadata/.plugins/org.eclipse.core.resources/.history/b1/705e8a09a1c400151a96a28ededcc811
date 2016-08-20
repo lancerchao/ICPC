@@ -1,0 +1,26 @@
+public class LRUCache {
+    
+	class Node{
+	    int key;
+	    int value;
+	    Node pre;
+	    Node next;
+	 
+	    public Node(int key, int value){
+	        this.key = key;
+	        this.value = value;
+	    }
+	}
+	
+    public LRUCache(int capacity) {
+        
+    }
+    
+    public int get(int key) {
+        
+    }
+    
+    public void set(int key, int value) {
+        
+    }
+}

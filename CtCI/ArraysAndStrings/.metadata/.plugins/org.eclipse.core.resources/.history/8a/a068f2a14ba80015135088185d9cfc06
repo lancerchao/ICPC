@@ -1,0 +1,17 @@
+package matrix;
+import junit.framework.*;
+public class testMatrix extends TestCase
+{
+	int[][] matrix1;
+	public void testEquals()
+	{
+		matrix1 = new int[4][4];
+		for(int row=0;row<4;row++)
+			for(int col = 0;col<4;col++)
+				matrix1[row][col] = row * 4 + col;
+	}
+	public void testRotate()
+	{
+		
+	}
+}
